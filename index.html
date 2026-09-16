@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Atualização de Telefones - Colaboradores</title>
+<link rel="stylesheet" href="assets/style.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+<header class="topo">
+  <h1>📞 Atualização de Telefones — Colaboradores</h1>
+  <a href="admin.html">Área do administrador</a>
+</header>
+
+<main>
+  <section class="card">
+    <h2>Progresso do preenchimento</h2>
+    <div class="progresso-resumo">
+      <div class="stat"><div class="num" id="resumoTotal">–</div><div class="label">Colaboradores</div></div>
+      <div class="stat"><div class="num" id="resumoPreenchido">–</div><div class="label">Já preenchidos</div></div>
+      <div class="stat"><div class="num" id="resumoPendente">–</div><div class="label">Pendentes</div></div>
+      <div class="stat"><div class="num" id="resumoPct">–</div><div class="label">Concluído</div></div>
+    </div>
+    <div style="height:240px"><canvas id="graficoLojas"></canvas></div>
+
+    <div class="linha-filtros" style="margin-top:18px">
+      <label style="font-size:0.85rem;color:#667">Detalhar por setor da loja:
+        <select id="selectLojaDetalhe"></select>
+      </label>
+    </div>
+    <div style="height:240px"><canvas id="graficoDetalhe"></canvas></div>
+  </section>
+
+  <section class="card">
+    <h2>Preencher telefone de um colaborador</h2>
+
+    <label class="campo-gestor">
+      Seu nome (gestor responsável pelo preenchimento)
+      <input type="text" id="nomeGestor" placeholder="Ex: Maria Oliveira" autocomplete="name" />
+    </label>
+
+    <div class="linha-filtros">
+      <input type="text" id="busca" placeholder="Buscar por nome ou nº de crachá..." />
+      <select id="filtroLoja"><option value="">Todas as lojas</option></select>
+      <select id="filtroDepartamento"><option value="">Todos os departamentos</option></select>
+    </div>
+    <p class="dica">Use a busca e/ou os filtros para localizar o colaborador. Os resultados são limitados a 100 por vez — refine a busca se não encontrar.</p>
+
+    <div id="listaColaboradores" class="lista-colaboradores">
+      <div class="vazio">Digite um nome/crachá ou escolha uma loja/departamento para começar.</div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/progresso.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
