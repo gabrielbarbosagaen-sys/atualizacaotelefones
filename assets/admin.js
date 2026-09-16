@@ -14,6 +14,24 @@
   let dadosAtuais = [];
   let painel = null;
 
+  // O Supabase limita cada requisição a no máximo 1000 linhas; com mais de
+  // 2000 colaboradores, buscamos em lotes até não haver mais dados.
+  async function buscarTodosDados(senha) {
+    const TAMANHO_LOTE = 1000;
+    let offset = 0;
+    let tudo = [];
+    while (true) {
+      const { data, error } = await sb
+        .rpc("exportar_dados", { p_senha: senha })
+        .range(offset, offset + TAMANHO_LOTE - 1);
+      if (error) throw error;
+      tudo = tudo.concat(data || []);
+      if (!data || data.length < TAMANHO_LOTE) break;
+      offset += TAMANHO_LOTE;
+    }
+    return tudo;
+  }
+
   // A checagem de senha de verdade acontece dentro do Supabase (função
   // exportar_dados), não aqui no navegador — isso é só a tela.
   async function entrar() {
@@ -24,15 +42,18 @@
     btnEntrar.disabled = true;
     btnEntrar.textContent = "Verificando...";
 
-    const { data, error } = await sb.rpc("exportar_dados", { p_senha: senha });
-
-    btnEntrar.disabled = false;
-    btnEntrar.textContent = "Entrar";
-
-    if (error) {
+    let data;
+    try {
+      data = await buscarTodosDados(senha);
+    } catch (error) {
+      btnEntrar.disabled = false;
+      btnEntrar.textContent = "Entrar";
       loginErro.textContent = error.message || "Senha incorreta.";
       return;
     }
+
+    btnEntrar.disabled = false;
+    btnEntrar.textContent = "Entrar";
 
     dadosAtuais = data || [];
     telaLogin.style.display = "none";
@@ -77,12 +98,12 @@
 
   btnAtualizarDados.addEventListener("click", async () => {
     const senha = senhaInput.value.trim();
-    const { data, error } = await sb.rpc("exportar_dados", { p_senha: senha });
-    if (error) {
+    try {
+      dadosAtuais = await buscarTodosDados(senha);
+    } catch (error) {
       alert("Não foi possível atualizar: " + error.message);
       return;
     }
-    dadosAtuais = data || [];
     renderizarTabela(dadosAtuais);
     if (painel) painel.atualizar();
   });

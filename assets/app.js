@@ -25,13 +25,13 @@
   });
 
   async function carregarFiltros() {
-    const { data, error } = await sb.from("colaboradores_busca").select("filial, departamento");
+    const { data, error } = await sb.rpc("filtros_disponiveis").single();
     if (error) {
       console.error(error);
       return;
     }
-    const lojas = [...new Set(data.map((d) => d.filial))].sort();
-    const deps = [...new Set(data.map((d) => d.departamento))].sort();
+    const lojas = [...(data.lojas || [])].sort();
+    const deps = [...(data.departamentos || [])].sort();
     filtroLojaEl.innerHTML =
       '<option value="">Todas as lojas</option>' + lojas.map((l) => `<option>${l}</option>`).join("");
     filtroDepEl.innerHTML =

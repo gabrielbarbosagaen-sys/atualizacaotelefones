@@ -45,6 +45,23 @@ from public.colaboradores;
 
 grant select on public.colaboradores_busca to anon;
 
+-- Listas de lojas/departamentos distintos, para os filtros da tela do gestor.
+-- Sempre retorna 1 linha (com arrays dentro) -- imune ao limite padrao de
+-- 1000 linhas por requisicao do PostgREST, diferente de um SELECT direto
+-- na tabela/view quando ha milhares de colaboradores.
+create or replace function public.filtros_disponiveis()
+returns table (lojas text[], departamentos text[])
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    array(select distinct filial from public.colaboradores order by 1),
+    array(select distinct departamento from public.colaboradores order by 1);
+$$;
+
+grant execute on function public.filtros_disponiveis() to anon;
+
 -- ----------------------------------------------------------------------------
 -- 3) RPC: progresso agregado por loja/departamento (sem dados pessoais)
 --    Usada pelo gráfico em tempo real.
@@ -150,7 +167,7 @@ returns table (
 )
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_hash text;
