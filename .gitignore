@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Dados pessoais de colaboradores (nomes) -- repositorio e publico,
+# entao estes arquivos ficam apenas locais. Continue usando-os normalmente
+# para importar no Supabase (veja README.md).
+Base_colaboradores_.xlsx
+supabase/colaboradores_import.csv

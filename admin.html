@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin - Atualização de Telefones</title>
+<link rel="stylesheet" href="assets/style.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<header class="topo">
+  <h1>🔒 Área do administrador</h1>
+  <a href="index.html">Voltar ao formulário</a>
+</header>
+
+<main>
+  <section id="telaLogin" class="card login-box">
+    <h2>Digite a senha de acesso</h2>
+    <input type="password" id="senhaInput" inputmode="numeric" placeholder="Senha" maxlength="20" />
+    <button class="salvar" id="btnEntrar" style="width:100%">Entrar</button>
+    <div class="erro" id="loginErro"></div>
+  </section>
+
+  <div id="telaAdmin" style="display:none">
+    <section class="card">
+      <h2>Progresso do preenchimento</h2>
+      <div class="progresso-resumo">
+        <div class="stat"><div class="num" id="resumoTotal">–</div><div class="label">Colaboradores</div></div>
+        <div class="stat"><div class="num" id="resumoPreenchido">–</div><div class="label">Já preenchidos</div></div>
+        <div class="stat"><div class="num" id="resumoPendente">–</div><div class="label">Pendentes</div></div>
+        <div class="stat"><div class="num" id="resumoPct">–</div><div class="label">Concluído</div></div>
+      </div>
+      <div style="height:220px"><canvas id="graficoLojas"></canvas></div>
+      <div class="linha-filtros" style="margin-top:18px">
+        <label style="font-size:0.85rem;color:#667">Detalhar por setor da loja:
+          <select id="selectLojaDetalhe"></select>
+        </label>
+      </div>
+      <div style="height:220px"><canvas id="graficoDetalhe"></canvas></div>
+    </section>
+
+    <section class="card">
+      <h2>Exportar planilha</h2>
+      <p class="dica">Gera um arquivo .xlsx com todos os colaboradores. A coluna "Telefone" já vem no formato DDD+número, somente números, em uma única célula.</p>
+      <div class="acoes-admin">
+        <button class="salvar" id="btnBaixar">⬇ Baixar planilha (.xlsx)</button>
+        <button class="salvar" id="btnAtualizarDados" style="background:#5a6b78">↻ Atualizar dados</button>
+      </div>
+      <div class="tabela-scroll">
+        <table class="tabela-admin">
+          <thead>
+            <tr><th>Crachá</th><th>Nome</th><th>Loja</th><th>Departamento</th><th>Telefone</th><th>Preenchido por</th><th>Atualizado em</th></tr>
+          </thead>
+          <tbody id="corpoTabela"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/progresso.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>
