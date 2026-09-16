@@ -204,7 +204,17 @@ grant execute on function public.exportar_dados(text) to anon;
 -- 6) Tempo real: permite que o gráfico atualize sozinho em todos os
 --    navegadores abertos quando qualquer gestor salvar um telefone.
 -- ----------------------------------------------------------------------------
-alter publication supabase_realtime add table public.colaboradores;
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'colaboradores'
+  ) then
+    alter publication supabase_realtime add table public.colaboradores;
+  end if;
+end $$;
 
 -- ============================================================================
 -- Depois de rodar este script:
